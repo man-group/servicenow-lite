@@ -15,10 +15,19 @@ function getPrefix(recordId) {
   return recordId.replace(/[^A-Z]/g, "");
 }
 
-function tableNameFromPrefix(prefix) {
+// Find the table with prefix `prefix`, and get the `key` requested,
+// or `defaultValue` if key is not present.
+function tableAttr(prefix, key, defaultValue) {
+  defaultValue = defaultValue || null;
+
   return _.find(config.tables, function(table) {
     return table.prefix == prefix;
-  }).name;
+  })[key] || defaultValue;
+}
+
+// TODO: just take recordId for all these functions, for consistency.
+function tableNameFromPrefix(prefix) {
+  return tableAttr(prefix, 'name');
 }
 
 function prefixFromTableName(tableName) {
@@ -28,27 +37,22 @@ function prefixFromTableName(tableName) {
 }
 
 function tableNameFromId(recordId) {
-  return tableNameFromPrefix(getPrefix(recordId));
+  var prefix = getPrefix(recordId);
+  return tableAttr(prefix, 'name');
 }
 
 function dateFieldFromId(recordId) {
   var prefix = getPrefix(recordId);
-  return _.find(config.tables, function(table) {
-    return table.prefix == prefix;
-  }).date_field || 'sys_created_on';
+  return tableAttr(prefix, 'date_field', 'sys_created_on');
 }
 
 function cloneFieldsFromPrefix(prefix) {
-  return _.find(config.tables, function(table) {
-    return table.prefix == prefix;
-  }).clone_fields || null;
+  return tableAttr(prefix, 'clone_fields');
 }
 
 function webFieldsFromId(recordId) {
   var prefix = getPrefix(recordId);
-  return _.find(config.tables, function(table) {
-    return table.prefix == prefix;
-  }).web_fields || null;
+  return tableAttr(prefix, 'web_fields');
 }
 
 module.exports = {
