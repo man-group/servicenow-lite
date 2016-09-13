@@ -15,19 +15,16 @@ function getPrefix(recordId) {
   return recordId.replace(/[^A-Z]/g, "");
 }
 
-// Find the table with prefix `prefix`, and get the `key` requested,
-// or `defaultValue` if key is not present.
-function tableAttr(prefix, key, defaultValue) {
+// Find the table whose prefix matches this recordId (e.g. 'CR1234')
+// or prefix (e.g. 'CR'), and get the `key` requested, or
+// `defaultValue` if key is not present.
+function tableAttr(recordIdOrPrefix, key, defaultValue) {
   defaultValue = defaultValue || null;
 
+  var prefix = getPrefix(recordIdOrPrefix);
   return _.find(config.tables, function(table) {
     return table.prefix == prefix;
   })[key] || defaultValue;
-}
-
-// TODO: just take recordId for all these functions, for consistency.
-function tableNameFromPrefix(prefix) {
-  return tableAttr(prefix, 'name');
 }
 
 function prefixFromTableName(tableName) {
@@ -36,23 +33,20 @@ function prefixFromTableName(tableName) {
   }).prefix;
 }
 
-function tableNameFromId(recordId) {
-  var prefix = getPrefix(recordId);
-  return tableAttr(prefix, 'name');
+function tableName(recordIdOrPrefix) {
+  return tableAttr(recordIdOrPrefix, 'name');
 }
 
-function dateFieldFromId(recordId) {
-  var prefix = getPrefix(recordId);
-  return tableAttr(prefix, 'date_field', 'sys_created_on');
+function dateField(recordIdOrPrefix) {
+  return tableAttr(recordIdOrPrefix, 'date_field', 'sys_created_on');
 }
 
-function cloneFieldsFromPrefix(prefix) {
-  return tableAttr(prefix, 'clone_fields');
+function cloneFields(recordIdOrPrefix) {
+  return tableAttr(recordIdOrPrefix, 'clone_fields');
 }
 
-function webFieldsFromId(recordId) {
-  var prefix = getPrefix(recordId);
-  return tableAttr(prefix, 'web_fields');
+function webFields(recordIdOrPrefix) {
+  return tableAttr(recordIdOrPrefix, 'web_fields');
 }
 
 module.exports = {
@@ -61,9 +55,8 @@ module.exports = {
   TABLE_NAMES: _.pluck(config.tables, "name"),
   getPrefix: getPrefix,
   prefixFromTableName: prefixFromTableName,
-  tableNameFromPrefix: tableNameFromPrefix,
-  tableNameFromId: tableNameFromId,
-  dateFieldFromId: dateFieldFromId,
-  cloneFieldsFromPrefix: cloneFieldsFromPrefix,
-  webFieldsFromId: webFieldsFromId
+  tableName: tableName,
+  dateField: dateField,
+  cloneFields: cloneFields,
+  webFields: webFields
 };

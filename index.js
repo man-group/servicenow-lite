@@ -71,7 +71,7 @@ function getRecordsWhere(table, parameters, callback) {
 function getRecordById(id, callback) {
   // Arguments based on http://wiki.servicenow.com/index.php?title=SOAP_Direct_Web_Service_API#getRecords
   var args = {number: id};
-  getRecordsWhere(config.tableNameFromId(id), args, function(err, records) {
+  getRecordsWhere(config.tableName(id), args, function(err, records) {
     if (err) {
       callback(err);
       return;
@@ -97,7 +97,7 @@ function mergeRecordArrays(array1, array2) {
   // tickets for the same day. We should also sort by ID.
   result = _.sortBy(result, function(item) {
     var id = recordId(item);
-    var field = config.dateFieldFromId(id);
+    var field = config.dateField(id);
     return moment(item[field]).toDate();
   });
   return result.reverse();
@@ -134,7 +134,7 @@ function workNotesBySysId(sysId, callback) {
 
 // Given an object specifying fields for a ticket, create it.
 function createTicket(params, prefix, callback) {
-  getClient(config.tableNameFromPrefix(prefix), function(err, client) {
+  getClient(config.tableName(prefix), function(err, client) {
     if (err) {
       callback(err, null);
       return;
@@ -155,7 +155,7 @@ function searchRecords(table, searchTerm, callback) {
     "__encoded_query": "123TEXTQUERY321=" + searchTerm,
     // Other API parameters documented at
     // http://wiki.servicenow.com/?title=Direct_Web_Services#Extended_Query_Parameters
-    "__order_by_desc": config.dateFieldFromId(prefix),
+    "__order_by_desc": config.dateField(prefix),
     "__limit": 15
   };
   getRecordsWhere(table + "_list", args, callback);
