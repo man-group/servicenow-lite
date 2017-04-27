@@ -3,7 +3,7 @@
 This package provides convenience functions for accessing the SOAP API
 provided by servicenow websites.
 
-It's primarily used by hubot-servicenow.
+It's primarily used by [hubot-servicenow-tickets](https://github.com/manahl/hubot-servicenow-tickets).
 
 License: MIT
 
