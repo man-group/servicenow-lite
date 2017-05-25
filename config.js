@@ -11,6 +11,7 @@ var config = etc()
     .file(configPath)
     .toJSON();
 
+// 'CR1234' -> 'CR'
 function getPrefix(recordId) {
   return recordId.replace(/[^A-Z]/g, "");
 }
