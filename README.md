@@ -1,4 +1,4 @@
-# servicenow-lite
+# servicenow-lite [![npm version](https://badge.fury.io/js/servicenow-lite.svg)](https://badge.fury.io/js/servicenow-lite)
 
 This package provides convenience functions for accessing the SOAP API
 provided by servicenow websites.
