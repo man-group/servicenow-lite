@@ -1,6 +1,6 @@
 {
   "name": "servicenow-lite",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "convenience wrapper for common ServiceNow SOAP calls",
   "main": "index.js",
   "scripts": {
