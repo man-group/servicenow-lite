@@ -8,6 +8,12 @@ var etc = require("etc");
 var configPath = path.join(require("app-root-dir").get(), "servicenow.yaml");
 var config = etc().use(require("etc-yaml")).file(configPath).toJSON();
 
+if (!config.tables) {
+  console.warn(
+    "WARNING servicenow-lite: Your servicenow.yaml is missing a tables: section"
+  );
+}
+
 // 'CR1234' -> 'CR'
 function getPrefix(recordId) {
   return recordId.replace(/[^A-Z]/g, "");
