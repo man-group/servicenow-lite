@@ -1,13 +1,13 @@
-'use strict';
+"use strict";
 
-var soap = require('soap');
-var _ = require('underscore');
-var moment = require('moment');
-var async = require('async');
-var request = require('request');
+var soap = require("soap");
+var _ = require("underscore");
+var moment = require("moment");
+var async = require("async");
+var request = require("request");
 
 // TODO: release this as a separate module.
-var config = require('./config');
+var config = require("./config");
 
 // TODO: this would probably be cleaner with a promise based API.
 
@@ -26,22 +26,26 @@ function getClient(table, callback) {
     auth: {
       user: username,
       pass: password,
-      sendImmediately: false,
+      sendImmediately: false
     }
   });
 
-  soap.createClient(url, {
-    escapeXML: true,
-    request: requestWithCreds,
-  }, function(err, client) {
-    if (err) {
-      callback(err);
-      return;
-    }
+  soap.createClient(
+    url,
+    {
+      escapeXML: true,
+      request: requestWithCreds
+    },
+    function(err, client) {
+      if (err) {
+        callback(err);
+        return;
+      }
 
-    client.setSecurity(new soap.BasicAuthSecurity(username, password));
-    callback(null, client);
-  });
+      client.setSecurity(new soap.BasicAuthSecurity(username, password));
+      callback(null, client);
+    }
+  );
 }
 
 // Retrieve all the servicenow records this table that match parameters.
@@ -70,7 +74,7 @@ function getRecordsWhere(table, parameters, callback) {
 // all its properties.
 function getRecordById(id, callback) {
   // Arguments based on http://wiki.servicenow.com/index.php?title=SOAP_Direct_Web_Service_API#getRecords
-  var args = {number: id};
+  var args = { number: id };
   getRecordsWhere(config.tableName(id), args, function(err, records) {
     if (err) {
       callback(err);
@@ -107,7 +111,13 @@ function mergeRecordArrays(array1, array2) {
 function recordsCreatedBy(creator, username, password, callback) {
   // For every table type, get all the records created by the current user.
   function recordsInTable(table, cb) {
-    return getRecordsWhere(table, {'sys_created_by': creator}, username, password, cb);
+    return getRecordsWhere(
+      table,
+      { sys_created_by: creator },
+      username,
+      password,
+      cb
+    );
   }
 
   // recordsInTable "change_request", callback
@@ -126,8 +136,8 @@ function recordsCreatedBy(creator, username, password, callback) {
 function workNotesBySysId(sysId, callback) {
   // Arguments based on https://community.servicenow.com/thread/163805
   var args = {
-    'element_id': sysId,
-    'element': 'work_notes'
+    element_id: sysId,
+    element: "work_notes"
   };
   getRecordsWhere("sys_journal_field", args, callback);
 }
@@ -152,11 +162,11 @@ function searchRecords(table, searchTerm, callback) {
     // as documented in:
     // http://wiki.servicenow.com/index.php?title=Encoded_Query_Strings#Generating_Encoded_Query_Strings_through_a_Filter
     // plus the discussion here https://community.servicenow.com/thread/165927
-    "__encoded_query": "123TEXTQUERY321=" + searchTerm,
+    __encoded_query: "123TEXTQUERY321=" + searchTerm,
     // Other API parameters documented at
     // http://wiki.servicenow.com/?title=Direct_Web_Services#Extended_Query_Parameters
-    "__order_by_desc": config.dateField(prefix),
-    "__limit": 15
+    __order_by_desc: config.dateField(prefix),
+    __limit: 15
   };
   getRecordsWhere(table + "_list", args, callback);
 }
@@ -180,15 +190,19 @@ function search(searchTerm, callback) {
 // Find the servicenow details for the requested user.
 // e.g. 'jsmith' -> {sys_id: '12345678901234abcdef', ...}
 function getUser(queryUser, callback) {
-  return getRecordsWhere("sys_user", {
-    user_name: queryUser
-  }, function(err, results) {
-    if (err) {
-      callback(err);
-      return;
+  return getRecordsWhere(
+    "sys_user",
+    {
+      user_name: queryUser
+    },
+    function(err, results) {
+      if (err) {
+        callback(err);
+        return;
+      }
+      callback(null, results[0]);
     }
-    callback(null, results[0]);
-  });
+  );
 }
 
 module.exports = {
@@ -199,5 +213,5 @@ module.exports = {
   createTicket: createTicket,
   search: search,
   getUser: getUser,
-  config: config,
+  config: config
 };

@@ -46,7 +46,7 @@
         "max-len": ["error", {"code": 122}],
         "new-cap": "error",
         "no-alert": "error",
-        "no-console": ["error", {"allow": ["error"]}],
+        "no-console": ["error", {"allow": ["error", "warn"]}],
         "no-constant-condition": ["error", {"checkLoops": false}],
         "no-eq-null": "error",
         "no-eval": "error",

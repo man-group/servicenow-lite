@@ -34,6 +34,9 @@ Next, you'll want a servicenow.yaml in the root of your project:
 ```
 $ cat ./servicenow.yaml
 root_url: https://servicenow.example.com
+tables:
+  - name: "change_request"
+    prefix: "CR"
 ```
 
 You can now make requests. Assuming you have a ticket called CR1234:
