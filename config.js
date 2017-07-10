@@ -6,7 +6,19 @@ var path = require("path");
 var etc = require("etc");
 
 var configPath = path.join(require("app-root-dir").get(), "servicenow.yaml");
-var config = etc().use(require("etc-yaml")).file(configPath).toJSON();
+var config = {};
+
+try {
+  config = etc().use(require("etc-yaml")).file(configPath).toJSON();
+
+  if (_.isEmpty(config)) {
+    console.warn("WARNING servicenow-lite: Could not find servicenow.yaml");
+  }
+} catch (e) {
+  console.warn(
+    "WARNING servicenow-lite: Could not load servicenow.yaml (empty?)"
+  );
+}
 
 if (!config.tables) {
   console.warn(
