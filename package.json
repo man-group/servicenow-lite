@@ -11,6 +11,7 @@
     "servicenow",
     "soap"
   ],
+  "repository": "manahl/servicenow-lite",
   "author": "Wilfred Hughes",
   "license": "MIT",
   "dependencies": {
