@@ -108,16 +108,10 @@ function mergeRecordArrays(array1, array2) {
 }
 
 // Get all records created by this username.
-function recordsCreatedBy(creator, username, password, callback) {
+function recordsCreatedBy(creator, callback) {
   // For every table type, get all the records created by the current user.
   function recordsInTable(table, cb) {
-    return getRecordsWhere(
-      table,
-      { sys_created_by: creator },
-      username,
-      password,
-      cb
-    );
+    return getRecordsWhere(table, { sys_created_by: creator }, cb);
   }
 
   // recordsInTable "change_request", callback
